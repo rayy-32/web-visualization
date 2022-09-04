@@ -7,11 +7,13 @@ function readdata(sample) {
         let metadata = data.metadata;
         let allResults = metadata.filter(sampleObj => sampleObj.id == sample);
         let result = allResults[0];
+        //console.log(result);
+
         let PANEL = d3.select("#sample-metadata");
         PANEL.html("");
 
         for (key in result) {
-            PANEL.append('h5').text(`${key.toUpperCase()}: ${result[key]}`);
+            PANEL.append('h5').text(`${key}: ${result[key]}`);
         };
     });
 }
@@ -20,13 +22,18 @@ function readdata(sample) {
 function createChart(sample) {
     d3.json(url).then(function(data) {
         let samples = data.samples;
-        let allResults = samples.filter(sampleObj => sampleObj.id == sample);
-        let result = allResults[0];
+        let allSamples = samples.filter(sampleObj => sampleObj.id == sample);
+        let result = allSamples[0];
+        //console.log(result);
 
         let otu_ids = result.otu_ids;
         let otu_labels = result.otu_labels;
         let sample_values = result.sample_values;
+        //console.log(otu_ids)
+        //console.log(otu_labels)
+        //console.log(sample_values)
 
+        //define bubble chart parameters
         let chartLayout = {
             title: 'Bacteria Cultures per Sample',
             hovermode: 'closest',
@@ -50,6 +57,7 @@ function createChart(sample) {
         //create bubble chart
         Plotly.newPlot('bubble', chartData, chartLayout);
 
+        //define bar chart parameters
         let yticks = otu_ids.slice(0, 10).map(otuID => `OTU ${otuID}`).reverse();
         let barData = [
             {
